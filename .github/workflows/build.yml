@@ -29,6 +29,7 @@ jobs:
       - name: Build Executable with Nuitka
         run: |
           nuitka --onefile `
+            --assume-yes-for-downloads `
             --windows-console-mode=disable `
             --enable-plugin=tk-inter `
             --windows-icon-from-ico=eso_log_fixer2.ico `
