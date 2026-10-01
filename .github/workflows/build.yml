@@ -22,16 +22,29 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install PyInstaller
-        run: pip install pyinstaller
+      - name: Install Dependencies
+        run: |
+          pip install nuitka zstandard
 
-      - name: Build Executable
-        run: pyinstaller --onefile --noconsole --icon=eso_log_fixer2.ico --version-file=file_version_info.txt --name="ESOLogFixer" eso_log_fixer.py
+      - name: Build Executable with Nuitka
+        run: |
+          nuitka --onefile `
+            --windows-console-mode=disable `
+            --enable-plugin=tk-inter `
+            --windows-icon-from-ico=eso_log_fixer2.ico `
+            --windows-company-name="@SixteenthMatt" `
+            --windows-product-name="ESO Log Fixer" `
+            --windows-file-description="ESO Encounter Log Fixer Utility" `
+            --windows-file-version=1.0.0.0 `
+            --windows-product-version=1.0.0.0 `
+            --copyright="Provided AS-IS. Use at your own risk." `
+            --output-filename=ESOLogFixer.exe `
+            eso_log_fixer.py
 
       - name: Create Release and Upload EXE
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: dist/ESOLogFixer.exe
+          files: ESOLogFixer.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
