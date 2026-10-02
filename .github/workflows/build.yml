@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Executable with Nuitka
         run: |
-          nuitka --standalone `
+          nuitka --onefile `
             --assume-yes-for-downloads `
             --windows-console-mode=disable `
             --enable-plugin=tk-inter `
@@ -39,17 +39,13 @@ jobs:
             --windows-file-version=1.0.0.0 `
             --windows-product-version=1.0.0.0 `
             --copyright="Provided AS-IS. Use at your own risk." `
-            --output-dir=build_out `
+            --output-filename=ESOLogFixer.exe `
             eso_log_fixer.py
 
-      - name: Archive Build Folder
-        run: |
-          Compress-Archive -Path "build_out\eso_log_fixer.dist\*" -DestinationPath "ESOLogFixer-v1.0.0.zip"
-
-      - name: Create Release and Upload ZIP
+      - name: Create Release and Upload EXE
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ESOLogFixer-v1.0.0.zip
+          files: ESOLogFixer.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
